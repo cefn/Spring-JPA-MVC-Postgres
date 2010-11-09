@@ -1,0 +1,14 @@
+./com.springsource.javax.persistence-1.0.0.jar
+./org.springframework.context-3.0.5.RELEASE.jar
+./org.springframework.context.support-3.0.5.RELEASE.jar
+./org.springframework.core-3.0.5.RELEASE.jar
+./org.springframework.jdbc-3.0.5.RELEASE.jar
+./org.springframework.orm-3.0.5.RELEASE.jar
+./org.springframework.transaction-3.0.5.RELEASE.jar
+./org.springframework.asm-3.0.5.RELEASE.jar
+./com.springsource.org.apache.log4j-1.2.15.jar
+./com.springsource.org.apache.commons.logging-1.1.1.jar
+./org.springframework.aop-3.0.5.RELEASE.jar
+./org.springframework.beans-3.0.5.RELEASE.jar
+./com.springsource.javax.annotation-1.0.0.jar
+./postgresql-9.0-801.jdbc4.jar
