@@ -15,10 +15,11 @@ import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import com.cefn.filesystem.impl.FilesystemImpl;
-import com.cefn.filesystem.traversal.LiveTraversalFactory;
-import com.cefn.filesystem.traversal.StoredTraversalFactory;
+import com.cefn.filesystem.traversal.DepthFirstFileVisitor;
+import com.cefn.filesystem.traversal.LiveVisitableFactory;
+import com.cefn.filesystem.traversal.StoredVisitableFactory;
 
-/** Accesses objects implementing interfaces with routines backed by a real filesystem. 
+/** Accesses objects implementing interfaces with routines backed by a real file system. 
  * Stores the data accessed in this way through JPA annotations on POJO domain objects. 
  * Retrieves the file system data through objects backed by JPA Database retrieval.
 */
@@ -46,37 +47,32 @@ public class App {
 		
 		try{
 
-			Filesystem liveFilesystem = new FilesystemImpl(new URL("file://c"));
-			final LiveTraversalFactory liveFactory = new LiveTraversalFactory();
+			/** Constructs data access objects on the fly by traversing file system. */
+			final LiveVisitableFactory liveFactory = new LiveVisitableFactory();
 			
-			//create and merge in-memory objects into the database
-			liveFactory.getFolderVisitable(liveFilesystem).accept(new Visitor<Folder>() {
-				@Override
-				public void visit(Folder item) {
-					liveFactory.getFileVisitable(item).accept(new Visitor<File>(){
-						@Override
-						public void visit(File item) {
-							entityManager.merge(item);
-						}
-					});
+			/** Constructs data access objects on the fly by loading from database. */
+			final StoredVisitableFactory storedFactory = new StoredVisitableFactory(entityManager);
+			
+			Filesystem filesystemInput = new FilesystemImpl(new URL("file://c"));
+			
+			/* Traverse live file hierarchy depth first, storing data */
+			new DepthFirstFileVisitor(liveFactory) {
+				public void visit(File f) {
+					entityManager.merge(f);
 				}
-			});
+			}.visit(filesystemInput);
 			
-			//retrieve and verify database-loaded objects
-			Filesystem storedFilesystem = (Filesystem) entityManager.createQuery("SELECT fs FROM Filesystem fs").getSingleResult();
-			final StoredTraversalFactory storedFactory = new StoredTraversalFactory(entityManager);
 			
-			storedFactory.getFolderVisitable(storedFilesystem).accept(new Visitor<Folder>() {
-				@Override
-				public void visit(Folder folder) {
-					storedFactory.getFileVisitable(folder).accept(new Visitor<File>(){
-						@Override
-						public void visit(File file) {
-							System.out.println("Retrieved file : " + file.getLocation());
-						}
-					});
+			/** Retrieve file system object from database */
+			Filesystem filesystemOutput = (Filesystem)entityManager.createQuery("SELECT fs FROM Filesystem fs").getSingleResult();
+			
+			/* Traverse stored file hierarchy depth first, printing out data */
+			new DepthFirstFileVisitor(storedFactory) {
+				public void visit(File f) {
+					System.out.println("Retrieved file : " + f.getLocation());
 				}
-			});
+			}.visit(filesystemInput);
+			
 		}
 		catch(MalformedURLException mue){
 			throw new RuntimeException(mue);
