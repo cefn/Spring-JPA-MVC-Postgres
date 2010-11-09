@@ -71,7 +71,7 @@ public class App {
 				public void visit(File f) {
 					System.out.println("Retrieved file : " + f.getLocation());
 				}
-			}.visit(filesystemInput);
+			}.visit(filesystemOutput);
 			
 		}
 		catch(MalformedURLException mue){
