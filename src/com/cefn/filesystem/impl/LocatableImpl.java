@@ -11,9 +11,11 @@ import com.cefn.filesystem.Locatable;
 public class LocatableImpl implements Locatable{
 
 	@Id
-	private final URL location;
+	private URL location;
 	
-	public LocatableImpl(URL location){
+	int version;
+		
+	LocatableImpl(URL location){
 		this.location = location;
 	}
 	

@@ -7,9 +7,9 @@ import com.cefn.filesystem.Visitor;
 
 public abstract class DepthFirstFileVisitor{
 
-	VisitableFactory visitableFactory;
+	Traversal visitableFactory;
 	
-	public DepthFirstFileVisitor(VisitableFactory visitableFactory) {
+	public DepthFirstFileVisitor(Traversal visitableFactory) {
 		this.visitableFactory = visitableFactory;
 	}
 		

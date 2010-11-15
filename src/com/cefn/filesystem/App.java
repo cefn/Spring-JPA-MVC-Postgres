@@ -1,62 +1,128 @@
 package com.cefn.filesystem;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.orm.jpa.EntityManagerFactoryInfo;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-
+import com.cefn.filesystem.factory.FileFactory;
+import com.cefn.filesystem.factory.FilesystemFactory;
+import com.cefn.filesystem.factory.FolderFactory;
+import com.cefn.filesystem.impl.FileImpl;
 import com.cefn.filesystem.impl.FilesystemImpl;
+import com.cefn.filesystem.impl.FolderImpl;
 import com.cefn.filesystem.traversal.DepthFirstFileVisitor;
-import com.cefn.filesystem.traversal.LiveVisitableFactory;
-import com.cefn.filesystem.traversal.StoredVisitableFactory;
+import com.cefn.filesystem.traversal.LiveTraversal;
+import com.cefn.filesystem.traversal.CachedTraversal;
+import com.cefn.filesystem.traversal.Traversal;
+import com.google.inject.AbstractModule;
+import com.google.inject.BindingAnnotation;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.persist.PersistService;
+import com.google.inject.persist.jpa.JpaPersistModule;
 
 /** Accesses objects implementing interfaces with routines backed by a real file system. 
  * Stores the data accessed in this way through JPA annotations on POJO domain objects. 
  * Retrieves the file system data through objects backed by JPA Database retrieval.
 */
 public class App {
-	
-	public static void main(String[] args){
-		new App(args).run();
-	}
-
-	public App(String[] args){
 		
-	}
+	public static void main(String[] args){
+		
+		JpaPersistModule persistModule = new JpaPersistModule("guicejpa");
+		Properties persistProperties = new Properties();
+		persistProperties.put("ConnectionDriverName", "org.postgresql.Driver");
+		persistProperties.put("ConnectionURL", "jdbc:postgresql://localhost/cefn");
+		persistProperties.put("ConnectionUserName", "cefn");
+		persistProperties.put("ConnectionPassword", "cefn");
+		persistProperties.put("Log", "DefaultLevel=WARN, Tool=INFO");
+		persistModule.properties(persistProperties);
+		
+		Injector injector = Guice.createInjector(
+				persistModule,
+				new Module(args)
+		);
 
-	@PersistenceContext
-	private EntityManager entityManager;
+		injector.getInstance(PersistService.class).start();
+		
+		App app = injector.getInstance(App.class);
+		
+		app.run();
+	}
+		
+	static class Module extends AbstractModule{
+				
+		private final String[] args;
+		
+		public Module(String[] args){
+			this.args = args;
+		}
+		
+		protected void configure() {
+			
+			//App relies on defs below
+			bind(App.class);
+
+			//make arguments globally available to constructors carrying Args annotation
+			bind(String[].class).annotatedWith(Args.class).toInstance(args);
+		
+			FactoryModuleBuilder factoryModuleBuilder = new FactoryModuleBuilder();
+			install(factoryModuleBuilder.implement(Filesystem.class, FilesystemImpl.class).build(FilesystemFactory.class));
+			install(factoryModuleBuilder.implement(Folder.class, FolderImpl.class).build(FolderFactory.class));
+			install(factoryModuleBuilder.implement(File.class, FileImpl.class).build(FileFactory.class));
+			
+			/** Constructs filesystem object on the fly by traversing file system. */
+			bind(Traversal.class).annotatedWith(Real.class).to(LiveTraversal.class);
+			
+			/** Constructs filesystem objects on the fly by loading from database. */
+			bind(Traversal.class).annotatedWith(Fake.class).to(CachedTraversal.class);
+		}
+											
+	}
+	
+	@BindingAnnotation @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.PARAMETER}) 
+	public @interface Args {}
+
+	@BindingAnnotation @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.PARAMETER}) 
+	public @interface Real {}
+
+	@BindingAnnotation @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.PARAMETER}) 
+	public @interface Fake {}
+
+	private final String[] args;
+	private final EntityManager entityManager;
+	private Traversal toRecord, toPlayback;
+	private FilesystemFactory filesystemFactory;
+	
+	@Inject
+	App(@Args String[] args, 
+		@Real Traversal toRecord, @Fake Traversal toPlayback, 
+		EntityManager entityManager,
+		FilesystemFactory filesystemFactory){
+		this.args = args;
+		this.toRecord = toRecord;
+		this.toPlayback = toPlayback;
+		this.entityManager = entityManager;
+		this.filesystemFactory = filesystemFactory;		
+	}
 	
 	public void run(){
 		
-		//Load spring dependency injection system
-		AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
-		//tell it about the configuration object
-		appContext.register(Config.class);
 		//ask it to configure this app instance (in particular inject an EntityManager)
-		this.entityManager = appContext.getBean(EntityManager.class);
-		
-		try{
+		try{			
 
-			/** Constructs data access objects on the fly by traversing file system. */
-			final LiveVisitableFactory liveFactory = new LiveVisitableFactory();
-			
-			/** Constructs data access objects on the fly by loading from database. */
-			final StoredVisitableFactory storedFactory = new StoredVisitableFactory(entityManager);
-			
-			Filesystem filesystemInput = new FilesystemImpl(new URL("file://c"));
+			Filesystem filesystemInput = filesystemFactory.create(new URL("file:///home/cefn"));
 			
 			/* Traverse live file hierarchy depth first, storing data */
-			new DepthFirstFileVisitor(liveFactory) {
+			new DepthFirstFileVisitor(toRecord) {
 				public void visit(File f) {
 					entityManager.merge(f);
 				}
@@ -67,7 +133,7 @@ public class App {
 			Filesystem filesystemOutput = (Filesystem)entityManager.createQuery("SELECT fs FROM Filesystem fs").getSingleResult();
 			
 			/* Traverse stored file hierarchy depth first, printing out data */
-			new DepthFirstFileVisitor(storedFactory) {
+			new DepthFirstFileVisitor(toPlayback) {
 				public void visit(File f) {
 					System.out.println("Retrieved file : " + f.getLocation());
 				}
@@ -79,22 +145,5 @@ public class App {
 		}
 		
 	}
-	
-	@Configuration
-	public static class Config {
-
-		@Bean
-		DataSource getDataSource(){
-			SimpleDriverDataSource bean = new SimpleDriverDataSource(new org.postgresql.Driver(), "jdbc:postgresql://localhost/cefn", "cefn", "cefn");
-			return bean;
-		}
 		
-		@Bean 
-		EntityManagerFactoryInfo getEntityManagerFactoryInfo(){
-			LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();		
-			return bean;
-		}
-				
-	}
-	
 }
