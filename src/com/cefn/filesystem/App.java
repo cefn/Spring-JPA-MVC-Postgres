@@ -37,7 +37,8 @@ public class App {
 		
 	public static void main(String[] args){
 		
-		JpaPersistModule persistModule = new JpaPersistModule("guicejpa");
+		JpaPersistModule persistModule = new JpaPersistModule("openjpa");
+		/*
 		Properties persistProperties = new Properties();
 		persistProperties.put("ConnectionDriverName", "org.postgresql.Driver");
 		persistProperties.put("ConnectionURL", "jdbc:postgresql://localhost/cefn");
@@ -45,6 +46,7 @@ public class App {
 		persistProperties.put("ConnectionPassword", "cefn");
 		persistProperties.put("Log", "DefaultLevel=WARN, Tool=INFO");
 		persistModule.properties(persistProperties);
+		*/
 		
 		Injector injector = Guice.createInjector(
 				persistModule,
@@ -124,13 +126,15 @@ public class App {
 			/* Traverse live file hierarchy depth first, storing data */
 			new DepthFirstFileVisitor(toRecord) {
 				public void visit(File f) {
-					entityManager.merge(f);
+					entityManager.getTransaction().begin();
+					File merged = entityManager.merge(f);
+					entityManager.getTransaction().commit();
 				}
 			}.visit(filesystemInput);
 			
 			
 			/** Retrieve file system object from database */
-			Filesystem filesystemOutput = (Filesystem)entityManager.createQuery("SELECT fs FROM Filesystem fs").getSingleResult();
+			Filesystem filesystemOutput = (Filesystem)entityManager.createQuery("SELECT fs FROM filesystem AS fs").getSingleResult();
 			
 			/* Traverse stored file hierarchy depth first, printing out data */
 			new DepthFirstFileVisitor(toPlayback) {

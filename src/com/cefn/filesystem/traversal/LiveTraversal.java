@@ -7,10 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.xml.ws.BindingType;
 
 import com.cefn.filesystem.File;
 import com.cefn.filesystem.Filesystem;
@@ -18,11 +14,7 @@ import com.cefn.filesystem.Folder;
 import com.cefn.filesystem.Visitable;
 import com.cefn.filesystem.Visitor;
 import com.cefn.filesystem.factory.FileFactory;
-import com.cefn.filesystem.factory.FilesystemFactory;
 import com.cefn.filesystem.factory.FolderFactory;
-import com.cefn.filesystem.impl.FileImpl;
-import com.cefn.filesystem.impl.FolderImpl;
-import com.google.inject.assistedinject.Assisted;
 
 public class LiveTraversal extends AbstractTraversal{
 
@@ -59,9 +51,9 @@ public class LiveTraversal extends AbstractTraversal{
 	public Visitable<File> getFileVisitable(final Folder fs) {
 		try{
 			final List<File> fileList = Arrays.asList(new File[]{
-					fileFactory.create(new URL(fs.getLocation(),"README.txt"), fs),
-					fileFactory.create(new URL(fs.getLocation(),"index.html"), fs),
-					fileFactory.create(new URL(fs.getLocation(),"play.mp3"), fs)
+					fileFactory.create(new URL(fs.getLocation(),"./README.txt"), fs),
+					fileFactory.create(new URL(fs.getLocation(),"./index.html"), fs),
+					fileFactory.create(new URL(fs.getLocation(),"./play.mp3"), fs)
 			});			
 			return new Visitable<File>(){
 				@Override

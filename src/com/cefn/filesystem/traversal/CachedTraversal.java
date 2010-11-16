@@ -26,12 +26,12 @@ public class CachedTraversal extends AbstractTraversal{
 	}
 
 	@Override
-	public Visitable<Folder> getFolderVisitable(final Filesystem fs) {
+	public Visitable<Folder> getFolderVisitable(final Filesystem filesystem) {
 		return new Visitable<Folder>(){
 			@Override
 			public void accept(Visitor<Folder> visitor) {
-				Query query = entityManager.createQuery("SELECT folder FROM Folder folder WHERE folder.filesystem = :filesystem");
-				query.setParameter("filesystem", fs);
+				Query query = entityManager.createQuery("SELECT fo FROM folder fo WHERE fo.filesystem = :filesystem");
+				query.setParameter("filesystem", filesystem);
 				Iterator<Folder> folderIterator = ((List<Folder>)query.getResultList()).iterator();
 				while(folderIterator.hasNext()){
 					visitor.visit(folderIterator.next());
@@ -41,12 +41,12 @@ public class CachedTraversal extends AbstractTraversal{
 	}
 
 	@Override
-	public Visitable<File> getFileVisitable(final Folder fs) {
+	public Visitable<File> getFileVisitable(final Folder folder) {
 		return new Visitable<File>(){
 			@Override
 			public void accept(Visitor<File> visitor) {
-				Query query = entityManager.createQuery("SELECT folder FROM File folder WHERE folder.filesystem = :filesystem");
-				query.setParameter("folder", fs);
+				Query query = entityManager.createQuery("SELECT fi FROM file fi WHERE fi.folder = :folder");
+				query.setParameter("folder", folder);
 				Iterator<File> fileIterator = ((List<File>)query.getResultList()).iterator();
 				while(fileIterator.hasNext()){
 					visitor.visit(fileIterator.next());

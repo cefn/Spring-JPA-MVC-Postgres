@@ -3,19 +3,29 @@ package com.cefn.filesystem.impl;
 import java.net.URL;
 
 import javax.annotation.Nullable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import com.cefn.filesystem.Filesystem;
 import com.cefn.filesystem.Folder;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-@Entity
+@Entity(name="folder")
 public class FolderImpl extends LocatableImpl implements Folder{
 	
-	private final Filesystem filesystem;
-	private final Folder parent;
+	@ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
+	private Filesystem filesystem;
+	
+	@ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
+	private Folder parent;
+	
+	protected FolderImpl(){
 		
+	}
+	
 	@AssistedInject
 	FolderImpl(@Assisted URL url, @Assisted Filesystem filesystem, @Nullable @Assisted Folder parent){
 		super(url);
@@ -31,5 +41,4 @@ public class FolderImpl extends LocatableImpl implements Folder{
 		return parent;
 	}
 	
-
 }

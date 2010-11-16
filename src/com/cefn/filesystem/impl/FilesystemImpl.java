@@ -2,15 +2,18 @@ package com.cefn.filesystem.impl;
 
 import java.net.URL;
 
-import javax.inject.Inject;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import com.cefn.filesystem.Filesystem;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-@Entity
+@Entity(name="filesystem")
 public class FilesystemImpl extends LocatableImpl implements Filesystem{
+	
+	protected FilesystemImpl(){
+	}
 	
 	@AssistedInject
 	FilesystemImpl(@Assisted URL url){

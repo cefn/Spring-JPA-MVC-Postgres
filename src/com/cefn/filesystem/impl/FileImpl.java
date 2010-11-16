@@ -2,7 +2,7 @@ package com.cefn.filesystem.impl;
 
 import java.net.URL;
 
-import javax.inject.Inject;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -11,21 +11,24 @@ import com.cefn.filesystem.Folder;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-@Entity
+@Entity(name="file")
 public class FileImpl extends LocatableImpl implements File{
 
-	private final Folder page;
+	@ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
+	private Folder folder;
 		
+	protected FileImpl(){		
+	}
+	
 	@AssistedInject
-	FileImpl(@Assisted URL url, @Assisted Folder page){
+	FileImpl(@Assisted URL url, @Assisted Folder folder){
 		super(url);
-		this.page = page;
+		this.folder = folder;
 	}	
 	
 	@Override
-	@ManyToOne
 	public Folder getFolder() {
-		return page;
+		return folder;
 	}
-	
+		
 }
