@@ -119,8 +119,8 @@ public class App {
 			new DepthFirstFileVisitor(toRecord) {
 				public void visit(File f) {
 					entityManager.getTransaction().begin();
-					//File merged = entityManager.merge(f);
-					entityManager.persist(f);
+					f = entityManager.merge(f);
+					//entityManager.persist(f);
 					entityManager.getTransaction().commit();
 				}
 			}.visit(filesystemInput);
