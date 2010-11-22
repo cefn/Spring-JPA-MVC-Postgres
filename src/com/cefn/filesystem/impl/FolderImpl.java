@@ -16,10 +16,11 @@ import com.google.inject.assistedinject.AssistedInject;
 @Entity(name="folder")
 public class FolderImpl extends LocatableImpl implements Folder{
 	
-	@ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private Filesystem filesystem;
 	
-	@ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@Nullable
 	private Folder parent;
 	
 	protected FolderImpl(){

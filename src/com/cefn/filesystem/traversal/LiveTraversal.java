@@ -28,9 +28,9 @@ public class LiveTraversal extends AbstractTraversal{
 		try{
 			//Place holder for Live implementation which returns Folders
 			final List<Folder> folderList = Arrays.asList(new Folder[]{
-					folderFactory.create(new URL(fs.getLocation(),"/var"), fs, null),
-					folderFactory.create(new URL(fs.getLocation(),"/opt"), fs, null),
-					folderFactory.create(new URL(fs.getLocation(),"/home"), fs, null)
+					folderFactory.create(new URL(fs.getLocation(),"var/"), fs, null),
+					folderFactory.create(new URL(fs.getLocation(),"opt/"), fs, null),
+					folderFactory.create(new URL(fs.getLocation(),"home/"), fs, null)
 			});			
 			return new Visitable<Folder>(){
 				@Override
@@ -51,9 +51,9 @@ public class LiveTraversal extends AbstractTraversal{
 	public Visitable<File> getFileVisitable(final Folder fs) {
 		try{
 			final List<File> fileList = Arrays.asList(new File[]{
-					fileFactory.create(new URL(fs.getLocation(),"./README.txt"), fs),
-					fileFactory.create(new URL(fs.getLocation(),"./index.html"), fs),
-					fileFactory.create(new URL(fs.getLocation(),"./play.mp3"), fs)
+					fileFactory.create(new URL(fs.getLocation(),"README.txt"), fs),
+					fileFactory.create(new URL(fs.getLocation(),"index.html"), fs),
+					fileFactory.create(new URL(fs.getLocation(),"play.mp3"), fs)
 			});			
 			return new Visitable<File>(){
 				@Override

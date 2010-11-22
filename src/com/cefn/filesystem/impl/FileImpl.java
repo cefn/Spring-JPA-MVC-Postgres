@@ -14,7 +14,7 @@ import com.google.inject.assistedinject.AssistedInject;
 @Entity(name="file")
 public class FileImpl extends LocatableImpl implements File{
 
-	@ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private Folder folder;
 		
 	protected FileImpl(){		

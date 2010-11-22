@@ -36,35 +36,27 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 public class App {
 		
 	public static void main(String[] args){
-		
-		JpaPersistModule persistModule = new JpaPersistModule("openjpa");
-		/*
-		Properties persistProperties = new Properties();
-		persistProperties.put("ConnectionDriverName", "org.postgresql.Driver");
-		persistProperties.put("ConnectionURL", "jdbc:postgresql://localhost/cefn");
-		persistProperties.put("ConnectionUserName", "cefn");
-		persistProperties.put("ConnectionPassword", "cefn");
-		persistProperties.put("Log", "DefaultLevel=WARN, Tool=INFO");
-		persistModule.properties(persistProperties);
-		*/
-		
+				
+		//start up dependency injection
 		Injector injector = Guice.createInjector(
-				persistModule,
-				new Module(args)
+				new JpaPersistModule("openjpa"),
+				new FilesystemModule(args)
 		);
 
+		//start up persistence
 		injector.getInstance(PersistService.class).start();
 		
+		//load and run app
 		App app = injector.getInstance(App.class);
-		
 		app.run();
+		
 	}
 		
-	static class Module extends AbstractModule{
+	static class FilesystemModule extends AbstractModule{
 				
 		private final String[] args;
 		
-		public Module(String[] args){
+		public FilesystemModule(String[] args){
 			this.args = args;
 		}
 		
@@ -121,13 +113,14 @@ public class App {
 		//ask it to configure this app instance (in particular inject an EntityManager)
 		try{			
 
-			Filesystem filesystemInput = filesystemFactory.create(new URL("file:///home/cefn"));
+			Filesystem filesystemInput = filesystemFactory.create(new URL("file:///home/cefn/"));
 			
 			/* Traverse live file hierarchy depth first, storing data */
 			new DepthFirstFileVisitor(toRecord) {
 				public void visit(File f) {
 					entityManager.getTransaction().begin();
-					File merged = entityManager.merge(f);
+					//File merged = entityManager.merge(f);
+					entityManager.persist(f);
 					entityManager.getTransaction().commit();
 				}
 			}.visit(filesystemInput);
