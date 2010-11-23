@@ -4,6 +4,25 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
     http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
     version="1.0">
+	<persistence-unit name="hibernate">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>com.cefn.filesystem.Filesystem</class>
+		<class>com.cefn.filesystem.Folder</class>
+		<class>com.cefn.filesystem.File</class>
+		<class>com.cefn.filesystem.Locatable</class>
+		<class>com.cefn.filesystem.impl.FilesystemImpl</class>
+		<class>com.cefn.filesystem.impl.FolderImpl</class>
+		<class>com.cefn.filesystem.impl.FileImpl</class>
+		<class>com.cefn.filesystem.impl.LocatableImpl</class>
+		<properties>
+			<property name="ConnectionURL" value="jdbc:postgresql://localhost/cefn" />
+			<property name="ConnectionDriverName" value="org.postgresql.Driver" />
+			<property name="ConnectionUserName" value="cefn" />
+			<property name="ConnectionPassword" value="cefn" />
+			<property name="Log" value="DefaultLevel=WARN, Tool=INFO" />
+		</properties>
+	</persistence-unit>    
+    <!-- 
 	<persistence-unit name="openjpa">
 		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
 		<class>com.cefn.filesystem.impl.FilesystemImpl</class>
@@ -19,4 +38,5 @@
 			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema" />
 		</properties>
 	</persistence-unit>
+     -->
 </persistence>

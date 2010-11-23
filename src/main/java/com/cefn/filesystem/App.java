@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -36,10 +35,10 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 public class App {
 		
 	public static void main(String[] args){
-				
+						
 		//start up dependency injection
 		Injector injector = Guice.createInjector(
-				new JpaPersistModule("openjpa"),
+				new JpaPersistModule("hibernate"),
 				new FilesystemModule(args)
 		);
 

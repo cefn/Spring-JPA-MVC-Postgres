@@ -2,9 +2,10 @@ package com.cefn.filesystem.factory;
 
 import java.net.URL;
 
+import javax.annotation.Nullable;
+
 import com.cefn.filesystem.Filesystem;
 import com.cefn.filesystem.Folder;
-import com.sun.istack.internal.Nullable;
 
 public interface FolderFactory {
 	

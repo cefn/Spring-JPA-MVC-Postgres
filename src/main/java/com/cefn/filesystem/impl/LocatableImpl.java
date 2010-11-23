@@ -6,9 +6,12 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Proxy;
+
+import com.cefn.filesystem.File;
 import com.cefn.filesystem.Locatable;
 
-@MappedSuperclass
+@MappedSuperclass 
 public class LocatableImpl implements Locatable{
 
 	private URL location;

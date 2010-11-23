@@ -6,12 +6,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Proxy;
+
 import com.cefn.filesystem.File;
 import com.cefn.filesystem.Folder;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-@Entity(name="file")
+@Entity(name="file") @Proxy(proxyClass=File.class)
 public class FileImpl extends LocatableImpl implements File{
 
 	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
