@@ -15,11 +15,13 @@
 		<class>com.cefn.filesystem.impl.FileImpl</class>
 		<class>com.cefn.filesystem.impl.LocatableImpl</class>
 		<properties>
-			<property name="ConnectionURL" value="jdbc:postgresql://localhost/cefn" />
-			<property name="ConnectionDriverName" value="org.postgresql.Driver" />
-			<property name="ConnectionUserName" value="cefn" />
-			<property name="ConnectionPassword" value="cefn" />
+			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost/cefn" />
+			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+			<property name="hibernate.connection.username" value="cefn" />
+			<property name="hibernate.connection.password" value="cefn" />
 			<property name="Log" value="DefaultLevel=WARN, Tool=INFO" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+			<property name="hibernate.hbm2ddl.auto" value="create" />
 		</properties>
 	</persistence-unit>    
     <!-- 

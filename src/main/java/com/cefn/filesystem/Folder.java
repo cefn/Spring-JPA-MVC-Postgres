@@ -1,8 +1,8 @@
 package com.cefn.filesystem;
 
-import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
 
-@Entity
+@MappedSuperclass
 public interface Folder extends Locatable{
 	
 	Filesystem getFilesystem();

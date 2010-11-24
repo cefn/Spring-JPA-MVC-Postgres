@@ -5,6 +5,7 @@ import java.net.URL;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Proxy;
 
@@ -13,13 +14,13 @@ import com.cefn.filesystem.Folder;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-@Entity(name="file") @Proxy(proxyClass=File.class)
+@Entity(name="file")
+@Table(name="file")
 public class FileImpl extends LocatableImpl implements File{
 
-	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private Folder folder;
 		
-	protected FileImpl(){		
+	protected FileImpl(){
 	}
 	
 	@AssistedInject
@@ -28,9 +29,13 @@ public class FileImpl extends LocatableImpl implements File{
 		this.folder = folder;
 	}	
 	
-	@Override
+	@ManyToOne(targetEntity = FolderImpl.class,cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	public Folder getFolder() {
 		return folder;
+	}
+	
+	private void setFolder(Folder folder) {
+		this.folder = folder;
 	}
 		
 }

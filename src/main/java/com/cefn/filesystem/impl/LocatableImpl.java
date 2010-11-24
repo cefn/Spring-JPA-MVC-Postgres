@@ -1,5 +1,6 @@
 package com.cefn.filesystem.impl;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.persistence.Id;
@@ -16,7 +17,6 @@ public class LocatableImpl implements Locatable{
 
 	private URL location;
 
-	@Id
 	private String locationString;
 
 	@Version
@@ -28,14 +28,24 @@ public class LocatableImpl implements Locatable{
 	LocatableImpl(URL location){
 		setLocation(location);
 	}
-		
-	@Override
+
+	@Id
+	public String getLocationString() {
+		return locationString;
+	}
+	
+	private void setLocationString(String locationString) throws MalformedURLException {
+		this.locationString = locationString;
+		this.location = new URL(locationString);
+	}
+	
 	public URL getLocation() {
 		return location;
 	}
 	
-	public void setLocation(URL location) {
+	private void setLocation(URL location) {
 		this.location = location;
 		this.locationString = location.toExternalForm();
 	}
+	
 }
