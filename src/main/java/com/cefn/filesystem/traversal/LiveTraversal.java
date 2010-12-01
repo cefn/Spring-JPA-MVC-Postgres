@@ -16,11 +16,15 @@ import com.cefn.filesystem.Visitor;
 import com.cefn.filesystem.factory.FileFactory;
 import com.cefn.filesystem.factory.FolderFactory;
 
-public class LiveTraversal extends AbstractTraversal{
+public class LiveTraversal implements Traversal {
 
+	FolderFactory folderFactory;
+	FileFactory fileFactory;
+	
 	@Inject
-	LiveTraversal(FolderFactory folderFactory, FileFactory fileFactory) {
-		super(folderFactory, fileFactory);
+	public LiveTraversal(FolderFactory folderFactory, FileFactory fileFactory){
+		this.folderFactory = folderFactory;
+		this.fileFactory = fileFactory;		
 	}
 	
 	@Override

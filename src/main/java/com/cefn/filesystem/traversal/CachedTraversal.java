@@ -15,13 +15,12 @@ import com.cefn.filesystem.Visitor;
 import com.cefn.filesystem.factory.FileFactory;
 import com.cefn.filesystem.factory.FolderFactory;
 
-public class CachedTraversal extends AbstractTraversal{
+public class CachedTraversal implements Traversal{
 		
 	private final transient EntityManager entityManager;
 	
 	@Inject
-	CachedTraversal(FolderFactory folderFactory, FileFactory fileFactory, EntityManager entityManager) {
-		super(folderFactory, fileFactory);
+	CachedTraversal(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 

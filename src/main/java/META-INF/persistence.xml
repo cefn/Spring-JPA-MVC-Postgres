@@ -6,10 +6,6 @@
     version="1.0">
 	<persistence-unit name="hibernate">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<class>com.cefn.filesystem.Filesystem</class>
-		<class>com.cefn.filesystem.Folder</class>
-		<class>com.cefn.filesystem.File</class>
-		<class>com.cefn.filesystem.Locatable</class>
 		<class>com.cefn.filesystem.impl.FilesystemImpl</class>
 		<class>com.cefn.filesystem.impl.FolderImpl</class>
 		<class>com.cefn.filesystem.impl.FileImpl</class>

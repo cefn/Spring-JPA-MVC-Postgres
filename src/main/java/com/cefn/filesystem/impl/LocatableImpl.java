@@ -3,16 +3,17 @@ package com.cefn.filesystem.impl;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
-import org.hibernate.annotations.Proxy;
-
-import com.cefn.filesystem.File;
 import com.cefn.filesystem.Locatable;
 
-@MappedSuperclass 
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 public class LocatableImpl implements Locatable{
 
 	private URL location;

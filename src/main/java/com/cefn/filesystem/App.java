@@ -27,6 +27,7 @@ import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import com.google.inject.servlet.ServletModule;
 
 /** Accesses objects implementing interfaces with routines backed by a real file system. 
  * Stores the data accessed in this way through JPA annotations on POJO domain objects. 
@@ -77,6 +78,7 @@ public class App {
 			
 			/** Constructs filesystem objects on the fly by loading from database. */
 			bind(Traversal.class).annotatedWith(Fake.class).to(CachedTraversal.class);
+			
 		}
 											
 	}
@@ -97,7 +99,8 @@ public class App {
 	
 	@Inject
 	App(@Args String[] args, 
-		@Real Traversal toRecord, @Fake Traversal toPlayback, 
+		@Real Traversal toRecord, 
+		@Fake Traversal toPlayback, 
 		EntityManager entityManager,
 		FilesystemFactory filesystemFactory){
 		this.args = args;
@@ -119,7 +122,6 @@ public class App {
 				public void visit(File f) {
 					entityManager.getTransaction().begin();
 					f = entityManager.merge(f);
-					//entityManager.persist(f);
 					entityManager.getTransaction().commit();
 				}
 			}.visit(filesystemInput);
