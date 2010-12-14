@@ -23,7 +23,7 @@ public class IndexServlet extends BasicHttpServlet{
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		operations.forward(request, response, "/freemarker/index.ftl");
+		operations.forward(request, response, "/templates/index.ftl");
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
+import org.eclipse.jetty.servlet.DefaultServlet;
+
 import com.cefn.filesystem.servlet.BasicHttpServlet.BasicServletOperations;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -38,21 +40,26 @@ public class ServletContextAdaptor extends GuiceServletContextListener{
 					
 					//used to handle operations demanded by servlet
 					bind(BasicHttpServlet.ServletOperations.class).to(BasicServletOperations.class);
+
+					//handle simple file serving from assets directory
+					bind(DefaultServlet.class).in(Singleton.class);
+					serve("/assets/*").with(DefaultServlet.class);
 					
-					//this binding handles welcome journey
+					//handle welcome journey
 					bind(IndexServlet.class).in(Singleton.class);
 					serve("/").with(IndexServlet.class);
-					
-					//this binding handles welcome journey
-					bind(HelloWorldServlet.class).in(Singleton.class);
-					serve("/hello").with(HelloWorldServlet.class);
-					
-					//this binding can serve any freemarker files
+										
+					//serve freemarker template files
 					bind(FreemarkerServlet.class).in(Singleton.class);
 					Map<String,String> configMap = new Hashtable<String,String>();
 					configMap.put("TemplatePath", "file:///home/cefn/Documents/bt/debatescape/cefn_guice_jpa/github/Spring-JPA-MVC-Postgres/src/main/webapp");
 					configMap.put("NoCache", "true");					
 					serve("*.ftl").with(FreemarkerServlet.class, configMap);
+
+					//test page
+					bind(HelloWorldServlet.class).in(Singleton.class);
+					serve("/hello").with(HelloWorldServlet.class);
+
 					
 				}
 			});
