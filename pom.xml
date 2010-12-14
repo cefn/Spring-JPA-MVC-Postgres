@@ -14,17 +14,6 @@
   			</configuration>
   		</plugin>  
   		<plugin>
-  			<groupId>org.mortbay.jetty</groupId>
-  			<artifactId>maven-jetty-plugin</artifactId>
-  			<version>6.1.26</version>
-			<configuration>
-			    <scanIntervalSeconds>10</scanIntervalSeconds>
-			    <webAppConfig>
-			      <contextPath>/</contextPath>
-			    </webAppConfig>
-			</configuration>
-  		</plugin>
-  		<plugin>
   			<artifactId>maven-eclipse-plugin</artifactId>
   			<version>2.8</version>
             <configuration>
@@ -44,21 +33,6 @@
   		<groupId>postgresql</groupId>
   		<artifactId>postgresql</artifactId>
   		<version>9.0-801.jdbc4</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.mycila.com.google.inject.extensions</groupId>
-  		<artifactId>guice-persist</artifactId>
-  		<version>3.0-20100927</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.mycila.com.google.inject.extensions</groupId>
-  		<artifactId>guice-assisted-inject</artifactId>
-  		<version>3.0-20100927</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.google.code.findbugs</groupId>
-  		<artifactId>jsr305</artifactId>
-  		<version>1.3.9</version>
   	</dependency>
   	<dependency>
   		<groupId>org.slf4j</groupId>
@@ -85,11 +59,6 @@
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
-  		<groupId>com.google.inject.extensions</groupId>
-  		<artifactId>guice-servlet</artifactId>
-  		<version>2.0</version>
-  	</dependency>
-  	<dependency>
   		<groupId>org.hibernate</groupId>
   		<artifactId>hibernate-search</artifactId>
   		<version>3.1.0.GA</version>
@@ -100,17 +69,44 @@
   		<version>2.3.16</version>
   	</dependency>
   	<dependency>
-  		<groupId>org.mortbay.jetty</groupId>
-  		<artifactId>jetty</artifactId>
-  		<version>7.0.0.pre5</version>
+  		<groupId>net.sourceforge.stripes</groupId>
+  		<artifactId>stripes</artifactId>
+  		<version>1.5.4</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
-  		<groupId>org.mortbay.jetty</groupId>
-  		<artifactId>maven-jetty-plugin</artifactId>
-  		<version>7.0.0.pre5</version>
+  		<groupId>com.google.code.findbugs</groupId>
+  		<artifactId>jsr305</artifactId>
+  		<version>1.3.9</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.eclipse.jetty</groupId>
+  		<artifactId>jetty-distribution</artifactId>
+  		<version>8.0.0.M2</version>
   		<type>pom</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.mycila.com.google.inject.extensions</groupId>
+  		<artifactId>guice-persist</artifactId>
+  		<version>3.0-20100927</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.mycila.com.google.inject.extensions</groupId>
+  		<artifactId>guice-servlet</artifactId>
+  		<version>3.0-20100927</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.mycila.com.google.inject.extensions</groupId>
+  		<artifactId>guice-assisted-inject</artifactId>
+  		<version>3.0-20100927</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
   	</dependency>
   </dependencies>
 </project>
