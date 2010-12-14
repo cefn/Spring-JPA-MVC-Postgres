@@ -3,6 +3,7 @@ package com.cefn.filesystem.servlet;
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.DispatcherType;
 
 import org.eclipse.jetty.server.Server;
@@ -30,7 +31,10 @@ public class ServerApp extends App{
 		List<Module> modules = super.getModules(args);
 		//add a binding to bring in the ServerScenario
 		modules.add(new AbstractModule(){ 
-			protected void configure() { bind(Scenario.class).to(ServerScenario.class); } 
+			protected void configure() { 
+				bind(Scenario.class).to(ServerScenario.class);
+				bind(ServletContextAdaptor.class);
+			}
 		});
 		//return the augmented module list
 		return modules;
@@ -39,13 +43,15 @@ public class ServerApp extends App{
 	
 	public static class ServerScenario extends Scenario{
 		
+		@Inject ServletContextAdaptor servletContextAdaptor;
+		
 		public void run(){
 			try{
 			    Server server = new Server(8080);
 			    ServletContextHandler root = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
 			    
 			    root.addFilter(GuiceFilter.class, "/*",EnumSet.allOf(DispatcherType.class));
-			    root.addEventListener(new ServletContextAdaptor());
+			    root.addEventListener(servletContextAdaptor);
 			    root.addServlet(DefaultServlet.class, "/");
 			    
 			    server.start();
