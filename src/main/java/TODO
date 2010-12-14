@@ -1,0 +1,4 @@
+Change file and folder to use relative URLs where ids have compound uniqueness (same filename AND same folder)   
+Associate app with real filesystem
+Create diffing behaviour (checks cache before merge).
+Incorporate Guice-servlet
