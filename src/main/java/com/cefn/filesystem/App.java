@@ -11,8 +11,8 @@ import com.cefn.filesystem.factory.FilesystemFactory;
 import com.cefn.filesystem.modules.ConfigModule;
 import com.cefn.filesystem.modules.FilesystemModule;
 import com.cefn.filesystem.modules.MainModule;
-import com.cefn.filesystem.modules.FilesystemModule.Fake;
-import com.cefn.filesystem.modules.FilesystemModule.Real;
+import com.cefn.filesystem.modules.FilesystemModule.Stored;
+import com.cefn.filesystem.modules.FilesystemModule.Actual;
 import com.cefn.filesystem.modules.MainModule.Args;
 import com.cefn.filesystem.traversal.Traversal;
 import com.google.inject.Guice;
@@ -22,30 +22,33 @@ import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 public abstract class App {
+
+	protected final Injector createInjector(String[] args){
+		return Guice.createInjector(getModules(args));
+	}
+
+	public final Scenario configureScenario(String[] args){
+		
+		//load the injector
+		Injector injector = createInjector(args);
+		
+		//start up persistence
+		injector.getInstance(PersistService.class).start();			
+		
+		//return the injected runnable
+		return injector.getInstance(Scenario.class);
+		
+	}
 	
 	protected List<Module> getModules(String[] args){		
 		return new ArrayList<Module>(Arrays.asList(
 			new Module[]{
 				new MainModule(args),
 				new ConfigModule(),
-				new FilesystemModule(),
-				new JpaPersistModule("hibernate")			
+				new JpaPersistModule("hibernate"),
+				new FilesystemModule()			
 			}
 		));
-	}
-	
-	protected final Injector createInjector(String[] args){
-		return Guice.createInjector(getModules(args));
-	}
-
-	public final Scenario configureScenario(String[] args){
-		Injector injector = createInjector(args);
-		
-		//initialise persistence
-		injector.getInstance(PersistService.class).start();			
-
-		//load the runnable
-		return injector.getInstance(Scenario.class);
 	}
 	
 	public static abstract class Scenario implements Runnable{
@@ -57,11 +60,9 @@ public abstract class App {
 		
 		@Inject protected FilesystemFactory filesystemFactory;
 
-		@Inject @Real protected Traversal liveTraversal;
-		@Inject @Fake protected Traversal storedTraversal;
+		@Inject @Actual protected Traversal liveTraversal;
+		@Inject @Stored protected Traversal storedTraversal;
 						
 	}
-
-	
 
 }

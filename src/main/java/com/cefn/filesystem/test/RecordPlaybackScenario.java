@@ -19,7 +19,7 @@ public class RecordPlaybackScenario extends Scenario{
 		//ask it to configure this app instance (in particular inject an EntityManager)
 		try{			
 
-			Filesystem filesystemInput = filesystemFactory.create(new URL("file:///home/cefn/"));
+			Filesystem filesystemInput = filesystemFactory.create(new URL("file:///home/cefn/Pictures/"));
 			
 			/* Traverse live file hierarchy depth first, storing data */
 			new DepthFirstFileVisitor(liveTraversal) {

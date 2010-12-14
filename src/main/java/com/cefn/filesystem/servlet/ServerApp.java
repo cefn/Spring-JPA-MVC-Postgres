@@ -29,11 +29,10 @@ public class ServerApp extends App{
 		
 		//load common modules from superclass
 		List<Module> modules = super.getModules(args);
-		//add a binding to bring in the ServerScenario
 		modules.add(new AbstractModule(){ 
 			protected void configure() { 
-				bind(Scenario.class).to(ServerScenario.class);
-				bind(ServletContextAdaptor.class);
+				bind(Scenario.class).to(ServerScenario.class); //add a binding to bring in the ServerScenario
+				bind(ServletContextAdaptor.class); //wire up all the servlets
 			}
 		});
 		//return the augmented module list
