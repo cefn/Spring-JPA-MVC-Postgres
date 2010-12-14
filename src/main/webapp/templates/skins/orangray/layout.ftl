@@ -9,15 +9,19 @@
       	 <#include "header.ftl"/>
       	 <#include "/menu.ftl"/>
          <div class="page">
-	         <#if content??>
-         		${content}
-         		<#else/>
-         		No content available.
-         	</#if>
+         	<div>
+		         <#if content??>
+			     		${content}
+		     	 <#else/>
+			     		No content available.
+		     	</#if>
+         	</div>
          </div>
          <#if sidebar??>
 	         <div class="menu">
-	         	${sidebar}
+	         	<div>
+		         	${sidebar}
+	         	</div>
 	         </div>
          </#if>
       	 <#include "footer.ftl"/>         

@@ -26,7 +26,8 @@ public class BasicHttpServlet extends HttpServlet{
 		
 		@Override
 		public void forward(HttpServletRequest request, HttpServletResponse response, String path) throws IOException, ServletException{			
-			request.getRequestDispatcher(path).forward(request, response);
+			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+			dispatcher.forward(request, response);
 		}
 		
 	}

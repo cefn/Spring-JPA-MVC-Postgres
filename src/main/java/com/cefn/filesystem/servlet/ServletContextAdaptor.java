@@ -31,34 +31,31 @@ public class ServletContextAdaptor extends GuiceServletContextListener{
 				protected void configureServlets() {
 					
 					//TODO CH check for hard-coded values below and export them to ConfigModule
-					
-					//pluggable operations handler
-					bind(BasicHttpServlet.ServletOperations.class).to(BasicServletOperations.class);
 
 					//handle welcome journey
 					bind(IndexServlet.class).in(Singleton.class);
-					serve("/").with(IndexServlet.class);
-					
-					//handle about journey
-					bind(AboutServlet.class).in(Singleton.class);
-					serve("/about.test").with(AboutServlet.class);
-					
+					//serve("/").with(IndexServlet.class);
+					serveRegex(IndexServlet.URI_PATTERN).with(IndexServlet.class);
+
+					//pluggable operations handler
+					bind(BasicHttpServlet.ServletOperations.class).to(BasicServletOperations.class);
+										
 					//handle simple file serving from assets directory
 					bind(DefaultServlet.class).in(Singleton.class);
 					Map<String,String> defaultServletParams = new HashMap<String, String>();
 					defaultServletParams.put("resourceBase", configProperties.getProperty(ConfigModule.STATIC_PATH_PROPNAME));
-					//defaultServletParams.put("maxCacheSize", "0"); 					
+					defaultServletParams.put("maxCacheSize", "0"); 					
 					serve("*.css").with(DefaultServlet.class, defaultServletParams);
 										
 					//serve freemarker template files
 					bind(FreemarkerServlet.class).in(Singleton.class);
 					Map<String,String> freemarkerServletParams = new HashMap<String, String>();
 					freemarkerServletParams.put("TemplatePath", configProperties.getProperty(ConfigModule.TEMPLATE_PATH_PROPNAME));
-					//freemarkerServletParams.put("NoCache", "true");
-					//freemarkerServletParams.put("template_update_delay", "0");
+					freemarkerServletParams.put("NoCache", "true");
+					freemarkerServletParams.put("template_update_delay", "0");
 					serve("*.ftl").with(FreemarkerServlet.class, freemarkerServletParams);
 
-					//test page
+					//sanity check page
 					bind(HelloWorldServlet.class).in(Singleton.class);
 					serve("/hello").with(HelloWorldServlet.class);
 					
