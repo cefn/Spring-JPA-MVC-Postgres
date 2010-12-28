@@ -23,16 +23,16 @@ public class ConfigModule extends AbstractModule{
 	public static final String ROOT_PATH_PROPNAME = "com.cefn.filesystem.root_path";
 	public static final String PROPERTIES_PATH_PROPNAME = "com.cefn.filesystem.properties_path";
 	public static final String STATIC_PATH_PROPNAME = "com.cefn.filesystem.static_path";
-	public static final String TEMPLATE_PATH_PROPNAME = "com.cefn.filesystem.template_path";
+	public static final String FREEMARKER_PATH_PROPNAME = "com.cefn.filesystem.freemarker_path";
 		
 	public static final String LOG_LEVEL_NAME = "com.cefn.filesystem.loglevel";
 
 	public static final String LOG_ALL = "ALL"; //matches name of a define in java.util.logging.Level
 		
 	public Properties configureDefaults(Properties properties){
-		lazySetProperty(properties, ROOT_PATH_PROPNAME, "."); 
-		lazySetProperty(properties, STATIC_PATH_PROPNAME, properties.getProperty(ROOT_PATH_PROPNAME) + "/static");
-		lazySetProperty(properties, TEMPLATE_PATH_PROPNAME, "file://" + properties.getProperty(ROOT_PATH_PROPNAME) + "/templates");
+		lazySetProperty(properties, ROOT_PATH_PROPNAME, "./");
+		lazySetProperty(properties, STATIC_PATH_PROPNAME, properties.getProperty(ROOT_PATH_PROPNAME) + "static");
+		lazySetProperty(properties, FREEMARKER_PATH_PROPNAME, "file://" + properties.getProperty(ROOT_PATH_PROPNAME) + "templates");
 		lazySetProperty(properties, LOG_LEVEL_NAME, LOG_ALL); 
 		return properties;
 	}

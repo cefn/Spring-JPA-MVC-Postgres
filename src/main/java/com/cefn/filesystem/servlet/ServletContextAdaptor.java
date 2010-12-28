@@ -8,6 +8,10 @@ import java.util.Properties;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import net.sourceforge.stripes.controller.DispatcherServlet;
+import net.sourceforge.stripes.controller.StripesFilter;
+
+import org.apache.jasper.servlet.JspServlet;
 import org.eclipse.jetty.servlet.DefaultServlet;
 
 import com.cefn.filesystem.modules.ConfigModule;
@@ -29,18 +33,34 @@ public class ServletContextAdaptor extends GuiceServletContextListener{
 			return Guice.createInjector(new ServletModule(){
 				@Override
 				protected void configureServlets() {
-					
 					//TODO CH check for hard-coded values below and export them to ConfigModule
-
-					//handle welcome journey
-					bind(IndexServlet.class).in(Singleton.class);
-					//serve("/").with(IndexServlet.class);
-					serveRegex(IndexServlet.URI_PATTERN).with(IndexServlet.class);
 
 					//pluggable operations handler
 					bind(BasicHttpServlet.ServletOperations.class).to(BasicServletOperations.class);
+					
+					//sanity check page
+					bind(HelloWorldServlet.class).in(Singleton.class);
+					serve("/hello.world").with(HelloWorldServlet.class);
+					
+					//add stripes filter 
+					bind(StripesFilter.class).in(Singleton.class);
+					Map<String,String> stripesFilterParams = new HashMap<String,String>();
+					stripesFilterParams.put("ActionResolver.Packages", "net.sourceforge.stripes.examples");
+					filter("*").through(StripesFilter.class, stripesFilterParams);
+
+					//add binding for Stripes actions
+					bind(DispatcherServlet.class).in(Singleton.class);
+					serve("*.action").with(DispatcherServlet.class);					
+
+					//serve jsp template files
+					bind(JspServlet.class).in(Singleton.class);
+					serve("*.jsp").with(JspServlet.class);
+					
+					//handle welcome journey
+					bind(IndexServlet.class).in(Singleton.class);
+					serveRegex(IndexServlet.URI_PATTERN).with(IndexServlet.class);
 										
-					//handle simple file serving from assets directory
+					//handle simple file serving from static assets directory
 					bind(DefaultServlet.class).in(Singleton.class);
 					Map<String,String> defaultServletParams = new HashMap<String, String>();
 					defaultServletParams.put("resourceBase", configProperties.getProperty(ConfigModule.STATIC_PATH_PROPNAME));
@@ -50,14 +70,10 @@ public class ServletContextAdaptor extends GuiceServletContextListener{
 					//serve freemarker template files
 					bind(FreemarkerServlet.class).in(Singleton.class);
 					Map<String,String> freemarkerServletParams = new HashMap<String, String>();
-					freemarkerServletParams.put("TemplatePath", configProperties.getProperty(ConfigModule.TEMPLATE_PATH_PROPNAME));
+					freemarkerServletParams.put("TemplatePath", configProperties.getProperty(ConfigModule.FREEMARKER_PATH_PROPNAME));
 					freemarkerServletParams.put("NoCache", "true");
 					freemarkerServletParams.put("template_update_delay", "0");
-					serve("*.ftl").with(FreemarkerServlet.class, freemarkerServletParams);
-
-					//sanity check page
-					bind(HelloWorldServlet.class).in(Singleton.class);
-					serve("/hello").with(HelloWorldServlet.class);
+					serve("*.ftl").with(FreemarkerServlet.class, freemarkerServletParams);					
 					
 				}
 			});

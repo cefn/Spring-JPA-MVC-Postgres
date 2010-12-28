@@ -1,6 +1,7 @@
 package com.cefn.filesystem.impl;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.persistence.Entity;
@@ -14,11 +15,10 @@ import com.cefn.filesystem.Locatable;
 
 @Entity(name="locatable") 
 @Inheritance(strategy=InheritanceType.JOINED)
-@IdClass(LocatableImpl.LocationId.class)
 public class LocatableImpl implements Locatable{
 
-	private URL location;
-
+	private String locationString;
+	
 	@Version
 	int version;
 
@@ -28,14 +28,28 @@ public class LocatableImpl implements Locatable{
 	LocatableImpl(URL location){
 		setLocation(location);
 	}
-		
+
 	@Id
+	public String getLocationString() {
+		return locationString;
+	}
+	
+	public void setLocationString(String locationString) {
+		this.locationString = locationString;
+	}
+	
 	public URL getLocation() {
-		return location;
+		try{
+			return new URL(locationString);			
+		}
+		catch(MalformedURLException mue){
+			//should never happen
+			throw new RuntimeException(mue);
+		}
 	}
 	
 	private void setLocation(URL location) {
-		this.location = location;
+		this.locationString = location.toExternalForm();	
 	}
 	
 	public static class LocationId implements Serializable{
