@@ -1,96 +1,173 @@
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee" version="2.4"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http:/java.sun.com/dtd/web-app_2_3.dtd">
-         		 
-    <description>
-      Stripes Examples
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http:/java.sun.com/dtd/web-app_2_3.dtd">
+
+	<description>
+		Stripes Examples
     </description>
-    <display-name>Stripes Examples</display-name>
+	<display-name>Stripes Examples</display-name>
 
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <!--              Configuration of the Stripes Filter.                   -->
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <filter>
-        <description>
-            Provides essential configuration and request processing services
-            for the Stripes framework.
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<!--
+		Configuration of the Stripes Filter.
+	-->
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<filter>
+		<description>
+			Provides essential configuration and request processing
+			services
+			for the Stripes framework.
         </description>
-        <display-name>Stripes Filter</display-name>
-        <filter-name>StripesFilter</filter-name>
-        <filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
+		<display-name>Stripes Filter</display-name>
+		<filter-name>StripesFilter</filter-name>
+		<filter-class>net.sourceforge.stripes.controller.StripesFilter
+		</filter-class>
 
-        <!-- REQUIRED init parameter for the Stripes Filter. -->
-        <init-param>
-            <param-name>ActionResolver.Packages</param-name>
-            <param-value>net.sourceforge.stripes.examples</param-value>
-        </init-param>
+		<!-- REQUIRED init parameter for the Stripes Filter. -->
+		<init-param>
+			<param-name>ActionResolver.Packages</param-name>
+			<param-value>net.sourceforge.stripes.examples</param-value>
+		</init-param>
 
-        <!-- Optional init parameter for the Stripes Filter. -->
-        <init-param>
-            <param-name>ActionBeanContext.Class</param-name>
-            <param-value>net.sourceforge.stripes.examples.bugzooky.BugzookyActionBeanContext</param-value>
-        </init-param>
+		<!-- Optional init parameter for the Stripes Filter. -->
+		<init-param>
+			<param-name>ActionBeanContext.Class</param-name>
+			<param-value>net.sourceforge.stripes.examples.bugzooky.BugzookyActionBeanContext
+			</param-value>
+		</init-param>
 
-        <init-param>
-            <param-name>Stripes.EncryptionKey</param-name>
-            <param-value>Don't Copy/Paste Me! Make up your own encryption key and keep it secret!</param-value>
-        </init-param>
-    </filter>
+		<init-param>
+			<param-name>Stripes.EncryptionKey</param-name>
+			<param-value>Don't Copy/Paste Me! Make up your own encryption key and
+				keep it secret!</param-value>
+		</init-param>
+	</filter>
 
-    <filter-mapping>
-        <filter-name>StripesFilter</filter-name>
-        <url-pattern>*.jsp</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
+	<filter-mapping>
+		<filter-name>StripesFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>*.ftl</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
 
-    <filter-mapping>
-        <filter-name>StripesFilter</filter-name>
-        <servlet-name>StripesDispatcher</servlet-name>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
+	<filter-mapping>
+		<filter-name>StripesFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
 
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <!--         Configuration of Bugzooky security filter.                  -->
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <filter>
-        <description>Provides login security for Bugzooky</description>
-        <filter-name>BugzookySecurityFilter</filter-name>
-        <filter-class>net.sourceforge.stripes.examples.bugzooky.SecurityFilter</filter-class>
-    </filter>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<!--
+		Configuration of Bugzooky security filter.
+	-->
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<filter>
+		<description>Provides login security for Bugzooky</description>
+		<filter-name>BugzookySecurityFilter</filter-name>
+		<filter-class>net.sourceforge.stripes.examples.bugzooky.SecurityFilter
+		</filter-class>
+	</filter>
 
-    <filter-mapping>
-        <filter-name>BugzookySecurityFilter</filter-name>
-        <url-pattern>/bugzooky/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>BugzookySecurityFilter</filter-name>
-        <url-pattern>/examples/bugzooky/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
+	<filter-mapping>
+		<filter-name>BugzookySecurityFilter</filter-name>
+		<url-pattern>/bugzooky/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>BugzookySecurityFilter</filter-name>
+		<url-pattern>/examples/bugzooky/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
 
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <!--         Configuration of the Stripes dispatcher Servlet.            -->
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <servlet>
-        <servlet-name>StripesDispatcher</servlet-name>
-        <servlet-class>net.sourceforge.stripes.controller.DispatcherServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<!--
+		Configuration of the Stripes dispatcher Servlet.
+	-->
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<servlet>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<servlet-class>net.sourceforge.stripes.controller.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
-    <servlet-mapping>
-        <servlet-name>StripesDispatcher</servlet-name>
-        <url-pattern>/dispatcher</url-pattern>
-    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/dispatcher</url-pattern>
+	</servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>StripesDispatcher</servlet-name>
-        <url-pattern>/action/*</url-pattern>
-    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/action/*</url-pattern>
+	</servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>StripesDispatcher</servlet-name>
-        <url-pattern>*.action</url-pattern>
-    </servlet-mapping>
-         
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>freemarker</servlet-name>
+		<servlet-class>freemarker.ext.servlet.FreemarkerServlet
+		</servlet-class>
+
+		<!-- FreemarkerServlet settings: -->
+		<init-param>
+			<param-name>TemplatePath</param-name>
+			<param-value>/templates/</param-value>
+		</init-param>
+		<init-param>
+			<param-name>NoCache</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ContentType</param-name>
+			<param-value>text/html; charset=UTF-8</param-value> <!-- Forces UTF-8 output encoding! -->
+		</init-param>
+
+		<!-- FreeMarker settings: -->
+		<init-param>
+			<param-name>template_update_delay</param-name>
+			<param-value>0</param-value> <!-- 0 is for development only! Use higher value otherwise. -->
+		</init-param>
+		<init-param>
+			<param-name>default_encoding</param-name>
+			<param-value>ISO-8859-1</param-value> <!-- The encoding of the template files. -->
+		</init-param>
+		<init-param>
+			<param-name>number_format</param-name>
+			<param-value>0.##########</param-value>
+		</init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<listener>
+		<listener-class>freemarker.ext.jsp.EventForwarding</listener-class>
+	</listener>
+
+	<servlet-mapping>
+		<servlet-name>freemarker</servlet-name>
+		<url-pattern>*.ftl</url-pattern>
+	</servlet-mapping>
+
+	<!-- Required to work around limitation in Freemarker's bespoke taglib engine (not loading tlds from Jars) -->
+	<taglib>
+		<taglib-uri>http://stripes.sourceforge.net/stripes.tld</taglib-uri>
+		<taglib-location>/WEB-INF/lib/stripes-1.5.5.tld</taglib-location>
+	</taglib>
+
+
 </web-app>
