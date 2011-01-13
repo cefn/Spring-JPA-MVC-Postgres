@@ -12,24 +12,22 @@ import com.google.inject.Module;
 */
 public class RecordPlaybackTestApp extends App{
 	
+	public RecordPlaybackTestApp(String... args){
+		super(args);
+	}
+	
 	public static void main(String[] args){
-		new RecordPlaybackTestApp().configureScenario(args).run();
+		new RecordPlaybackTestApp(args).start();
 	}
 	
 	@Override
 	protected List<Module> getModules(String[] args) {
-		
 		//load common modules from superclass
 		List<Module> modules = super.getModules(args);
-
-		//add a binding to bring in the SaveLoadScenario
-		modules.add(new AbstractModule(){ 
-			protected void configure() { bind(Scenario.class).to(RecordPlaybackScenario.class); } 
-		});
-		
+		//add a binding to bring in the RecordPlaybackScenario
+		modules.add(new AbstractModule(){  protected void configure() { bind(Scenario.class).to(RecordPlaybackScenario.class); } });
 		//return the augmented module list
 		return modules;
-		
 	};
 				
 }

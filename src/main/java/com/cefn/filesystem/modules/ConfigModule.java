@@ -30,9 +30,9 @@ public class ConfigModule extends AbstractModule{
 	public static final String LOG_ALL = "ALL"; //matches name of a define in java.util.logging.Level
 		
 	public Properties configureDefaults(Properties properties){
-		lazySetProperty(properties, ROOT_PATH_PROPNAME, "./");
-		lazySetProperty(properties, STATIC_PATH_PROPNAME, properties.getProperty(ROOT_PATH_PROPNAME) + "static");
-		lazySetProperty(properties, FREEMARKER_PATH_PROPNAME, "file://" + properties.getProperty(ROOT_PATH_PROPNAME) + "templates");
+		lazySetProperty(properties, ROOT_PATH_PROPNAME, System.getProperty("user.dir")); //fall back to current working directory
+		lazySetProperty(properties, STATIC_PATH_PROPNAME, properties.getProperty(ROOT_PATH_PROPNAME) + "/static");
+		lazySetProperty(properties, FREEMARKER_PATH_PROPNAME, "file://" + properties.getProperty(ROOT_PATH_PROPNAME) + "/templates");
 		lazySetProperty(properties, LOG_LEVEL_NAME, LOG_ALL); 
 		return properties;
 	}
